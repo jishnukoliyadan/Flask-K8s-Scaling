@@ -1,7 +1,9 @@
 import uvicorn
 import numpy as np
-from random import choice
+from random import choice, randint
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
+
 
 app = FastAPI()
 
@@ -33,6 +35,22 @@ def matrixCalc(maxSize: int = 1500) -> np.ndarray:
     matrix_a = np.random.rand(maxSize, maxSize)
     matrix_b = np.random.rand(maxSize, maxSize)
     return np.matmul(matrix_a, matrix_b)
+
+
+@app.get("/", response_class=HTMLResponse)
+async def home():
+    radint = randint(1, 50)
+    return f"""
+    <html>
+        <head>
+            <title>FastAPI Home</title>
+        </head>
+        <body>
+            <h1>Welcome to the FastAPI App</h1>
+            <p>Please go to the sample <a href="/products/{radint}?max_size=1000">Products Endpoint</a>.</p>
+        </body>
+    </html>
+    """
 
 
 @app.get("/products/{item_number}")
